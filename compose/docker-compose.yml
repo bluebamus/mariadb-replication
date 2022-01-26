@@ -47,49 +47,7 @@ services:
       - ../volumes/db/mariadb-003/db-init-files/:/docker-entrypoint-initdb.d/
     networks:
       - mdbbridge
-
-  # orchestrator:
-  #   image: openarkcode/orchestrator:latest
-  #   container_name: orchestrator
-  #   hostname: orchestrator
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - mdbbridge
-
-  # proxysql:
-  #   image: proxysql/proxysql
-  #   container_name: proxysql
-  #   hostname: proxysql
-  #   ports:
-  #     - "16032:6032"
-  #     - "16033:6033"
-  #   volumes:
-  #     - ../volumes/db/proxysql/data:/var/lib/proxysql
-  #     - ../volumes/db/proxysql/conf/proxysql.cnf:/etc/proxysql.cnf
-  #   networks:
-  #     - mdbbridge
-
-  # prometheus:
-  #   image: prom/prometheus-linux-amd64
-  #   container_name: prometheus
-  #   hostname: prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ../volumes/monitoring/prometheus/data:/data
-  #     - ../volumes/monitoring/prometheus/conf:/etc/prometheus
-  #   networks:
-  #     - mdbbridge
-  # grafana:
-  #   image: grafana/grafana
-  #   container_name: grafana
-  #   hostname: grafana
-  #   ports:
-  #     - "13000:3000"
-  #   networks:
-  #     - mdbbridge
-
+      
 networks:
   mdbbridge:
     #external: true
