@@ -1,5 +1,5 @@
-# mysql-replication_prometheus-grafana
-A docker-compose project for mysql replication and monitoring solution which has prometheus and grafana.
+# mariadb-replication
+A docker-compose project for mariadb.
 
 # Working environment
 master : mariadb-001   
