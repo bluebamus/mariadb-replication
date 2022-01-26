@@ -17,3 +17,8 @@ network : mdbbridge
     ``` shell
     ./replication_query.sh
     ```
+
+# Reference
+https://zenn.dev/nrikiji/articles/66f55c84229116   
+
+https://www.walksocket.com/archives/852
