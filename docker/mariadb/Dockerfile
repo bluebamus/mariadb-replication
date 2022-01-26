@@ -1,15 +1,20 @@
-FROM ubuntu:20.04
+FROM mariadb:latest
 
 ENV OS_LOCALE="en_US.utf8" \
     DEBIAN_FRONTEND=noninteractive
 
+# RUN apt-get update &&\
+#     apt-get install -y locales wget apt-utils software-properties-common dirmngr apt-transport-https lsb-release ca-certificates &&\   
+#     locale-gen ${OS_LOCALE} &&\
+#     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' &&\
+#     add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.5/ubuntu focal main' &&\
+#     apt-get update &&\
+#     apt-get install -y mariadb-server mariadb-client &&\
+#     apt-get upgrade -y 
+
 RUN apt-get update &&\
     apt-get install -y locales wget apt-utils software-properties-common dirmngr apt-transport-https lsb-release ca-certificates &&\   
-    locale-gen ${OS_LOCALE} &&\
-    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' &&\
-    add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.5/ubuntu focal main' &&\
-    apt-get update &&\
-    apt-get install -y mariadb-server mariadb-client &&\
+    locale-gen ${OS_LOCALE} &&\    
     apt-get upgrade -y 
     
 ENV LANG=${OS_LOCALE} \
@@ -22,11 +27,11 @@ COPY ["start_node_exporter.sh", \
 
 USER root
 
-# RUN cat /etc/passwd | grep mysql
+RUN groupmod -g 1001 mysql
 
-# RUN groupadd -g 1001 mysql
+RUN usermod -u 1001 mysql
 
-# RUN useradd -m -u 1001 -r -g 1001 mysql
+RUN cat /etc/passwd
 
 WORKDIR /tmp/
 
@@ -37,7 +42,7 @@ RUN wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.13.0
 RUN mkdir -p /opt/exporters/ && \
     tar -xzvf ./node_exporter-1.3.1.linux-amd64.tar.gz -C /opt/exporters && \
     tar -xzvf ./mysqld_exporter-0.13.0.linux-amd64.tar.gz -C /opt/exporters
-    
+
 WORKDIR /opt/exporters/
 
 RUN mv node_exporter-1.3.1.linux-amd64 node_exporter && \
@@ -55,22 +60,16 @@ RUN apt-get purge -y --auto-remove software-properties-common wget gnupg &&\
     apt-get autoremove -y && apt-get clean &&\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-VOLUME ["/var/lib/mysql", "/var/log/mysql","/etc/percona-server.conf.d"]
+VOLUME ["/var/lib/mysql", "/var/log/mysql","/etc/mysql/"]
 
-COPY ps-entry.sh /tmp/docker-entrypoint.sh
+# COPY ps-entry.sh /tmp/docker-entrypoint.sh
 
-RUN chmod +x /tmp/docker-entrypoint.sh
+# RUN chmod +x /tmp/docker-entrypoint.sh
 
-ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
+# ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
 
 USER mysql
 
-EXPOSE 3306
+# EXPOSE 3306
 
-CMD ["mysqld"]
-
-# ADD catalina.sh /tmp/catalina.sh
-
-# RUN chmod +x /tmp/catalina.sh
-
-# CMD ["/tmp/catalina.sh"]
+CMD ["mariadbd"]

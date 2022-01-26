@@ -1,0 +1,96 @@
+version: "3"
+services:
+  mariadb-001:
+    build: ../docker/mariadb/
+    container_name: mariadb-001
+    hostname: mariadb-001
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ../volumes/db/mariadb-001/data:/var/lib/mysql
+      - ../volumes/db/mariadb-001/log:/var/log/mysql
+      - ../volumes/db/mariadb-001/conf/my.cnf:/etc/mysql/my.cnf
+      - ../volumes/db/mariadb-001/db-init-files/:/docker-entrypoint-initdb.d/
+    networks:
+      - mdbbridge
+
+  mariadb-002:
+    build: ../docker/mariadb/
+    container_name: mariadb-002
+    hostname: mariadb-002
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ../volumes/db/mariadb-002/data:/var/lib/mysql
+      - ../volumes/db/mariadb-002/log:/var/log/mysql
+      - ../volumes/db/mariadb-002/conf/my.cnf:/etc/mysql/my.cnf
+      #- ../volumes/db/mariadb-002/db-init-files/:/docker-entrypoint-initdb.d/
+    networks:
+      - mdbbridge
+
+  mariadb-003:
+    build: ../docker/mariadb/
+    container_name: mariadb-003
+    hostname: mariadb-003
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ../volumes/db/mariadb-003/data:/var/lib/mysql
+      - ../volumes/db/mariadb-003/log:/var/log/mysql
+      - ../volumes/db/mariadb-003/conf/my.cnf:/etc/mysql/my.cnf
+      #- ../volumes/db/mariadb-003/db-init-files/:/docker-entrypoint-initdb.d/
+    networks:
+      - mdbbridge
+
+  # orchestrator:
+  #   image: openarkcode/orchestrator:latest
+  #   container_name: orchestrator
+  #   hostname: orchestrator
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - mdbbridge
+
+  # proxysql:
+  #   image: proxysql/proxysql
+  #   container_name: proxysql
+  #   hostname: proxysql
+  #   ports:
+  #     - "16032:6032"
+  #     - "16033:6033"
+  #   volumes:
+  #     - ../volumes/db/proxysql/data:/var/lib/proxysql
+  #     - ../volumes/db/proxysql/conf/proxysql.cnf:/etc/proxysql.cnf
+  #   networks:
+  #     - mdbbridge
+
+  # prometheus:
+  #   image: prom/prometheus-linux-amd64
+  #   container_name: prometheus
+  #   hostname: prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ../volumes/monitoring/prometheus/data:/data
+  #     - ../volumes/monitoring/prometheus/conf:/etc/prometheus
+  #   networks:
+  #     - mdbbridge
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   hostname: grafana
+  #   ports:
+  #     - "13000:3000"
+  #   networks:
+  #     - mdbbridge
+
+networks:
+  mdbbridge:
+    #external: true
+    driver: bridge
